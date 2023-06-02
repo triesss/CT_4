@@ -22,7 +22,11 @@ public class Coverage {
 
     // list of integers that are the indices of the rows that have to be tested
     private static int[] MCDC(TruthTable table) {
-        // TODO
+        int rows = table.rows;
+        int columns = table.columns;
+        boolean[][] truthTable = table.table;
+
+
         return null;
     }
 }
