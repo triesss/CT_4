@@ -25,18 +25,18 @@ public class Coverage {
         boolean rowResult;
         for (int i = 0; i < table.rows; i++) {
             rowResult = table.table[i][table.columns - 1];
-            findRowsToMark(table, i, rowResult, markedRows);
+            findRowsToMarkMMBUE(table, i, rowResult, markedRows);
         }
         return markedRows.stream().mapToInt(i -> i).toArray();
     }
 
-    private static void findRowsToMark(TruthTable table, int i, boolean rowResult, Set<Integer> markedRows) {
+    private static void findRowsToMarkMMBUE(TruthTable table, int i, boolean rowResult, Set<Integer> markedRows) {
         int differentBooleans;
         for (int j = i + 1; j < table.rows; j++) {
             differentBooleans = 0;
             // get rows that are different by one boolean
             for (int k = 0; k < table.columns - 1; k++) {
-                if (rowResult == table.table[j][table.columns - 1]){
+                if (rowResult == table.table[j][table.columns - 1]) {
                     break;
                 }
                 if (table.table[i][k] != table.table[j][k]) {
@@ -52,11 +52,40 @@ public class Coverage {
 
     // list of integers that are the indices of the rows that have to be tested
     private static int[] MCDC(TruthTable table) {
-        int rows = table.rows;
-        int columns = table.columns;
-        boolean[][] truthTable = table.table;
+        HashSet<Pair> pairs = new HashSet<>();
+        HashSet<Integer> markedRows = new HashSet<>();
+        boolean rowResult;
+            for (int i = 0; i < table.rows; i++) {
+                rowResult = table.table[i][table.columns - 1];
+                findPairsToMarkMCDC(table, i, rowResult, pairs);
+            }
+        for (Pair pair:
+             pairs) {
+            markedRows.add(pair.indexFirst);
+            markedRows.add(pair.indexSecond);
+        }
+        return markedRows.stream().sorted().mapToInt(i -> i).toArray();
+    }
 
-
-        return null;
+    private static void findPairsToMarkMCDC(TruthTable table, int i, boolean rowResult, HashSet<Pair> pairs) {
+        int differentBooleans;
+        int index = 0;
+        for (int j = i + 1; j < table.rows; j++) {
+            differentBooleans = 0;
+            // get rows that are different by one boolean
+            for (int k = 0; k < table.columns - 1; k++) {
+                if (rowResult == table.table[j][table.columns - 1]) {
+                    break;
+                }
+                if (table.table[i][k] != table.table[j][k]) {
+                    differentBooleans++;
+                    index = k;
+                }
+            }
+            if (differentBooleans == 1) {
+                Pair pair = new Pair(i, j, index);
+                pairs.add(pair);
+            }
+        }
     }
 }
