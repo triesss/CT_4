@@ -21,27 +21,43 @@ public class ReaderWriteTable {
     //|  1 |  1 |  1 |  0 |
 
 
-    // TODO handle faulty tables
-    public static TruthTable readTableFromFile(String paths) throws IOException {
-        List<List<Boolean>> table = new ArrayList<>();
-        BufferedReader reader = new BufferedReader(new FileReader(paths));
-        reader.lines().skip(2).forEach(line -> {
-            String[] splits = line.split("\\|");
-            List<Boolean> row = new ArrayList<>();
-            for (int i = 1; i < splits.length; i++) {
-                row.add(Objects.equals(splits[i].trim(), "1"));
+    public static List<TruthTable> readTableFromFile(String[] paths) throws IOException {
+        List<TruthTable> tables = new ArrayList<>();
+        Arrays.stream(paths).forEach(p -> {
+            List<List<Boolean>> table = new ArrayList<>();
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new FileReader(p));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
             }
-            table.add(row);
+            String[] columnLabels = new String[0];
+            try {
+                columnLabels = reader.readLine().split("\\|");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            reader.lines().skip(1).forEach(line -> {
+                String[] splits = line.split("\\|");
+                if (splits.length != 5){
+                    throw new IllegalArgumentException("Die Datei ist fehlerhaft");
+                }else {
+                    List<Boolean> row = new ArrayList<>();
+                    for (int i = 1; i < splits.length; i++) {
+                        row.add(Objects.equals(splits[i].trim(), "1"));
+                    }
+                    table.add(row);
+                }
+            });
+            // convert List to 2d array
+            boolean[][] tableArray = getBooleans(table);
+            tables.add(new TruthTable(tableArray, columnLabels));
         });
-        // convert List to 2d array
-        boolean[][] tableArray = getBooleans(table);
-        return new TruthTable(tableArray);
+        return tables;
+
     }
 
-    // write a table to a file
-    public static void writeTableToFile(TruthTable table, String path){
-        // TODO
-    }
+
 
     private static boolean[][] getBooleans(List<List<Boolean>> table) {
         boolean[][] tableArray = new boolean[table.size()][];
@@ -55,8 +71,11 @@ public class ReaderWriteTable {
     }
 
     public static void main(String[] args) throws IOException {
-        TruthTable table = readTableFromFile("/Users/leonbeitz/IdeaProjects/CT_4/src/main/resources/Material-Aufg4/exercise1.md");
+        String[] paths = {"/Users/thoreottenheym/Nextcloud/Uni/CT_4/src/main/resources/Material-Aufg4/exercises/ex0.md", "/Users/thoreottenheym/Nextcloud/Uni/CT_4/src/main/resources/Material-Aufg4/exercises/ex1.md"};
+        List<TruthTable> table = readTableFromFile(paths);
 
-        System.out.println(Arrays.deepToString(table.table));
+        System.out.println(table.get(0).toString());
+        System.out.println(table.get(1).toString());
+
     }
 }
