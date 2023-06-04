@@ -29,7 +29,14 @@ public class Main {
         String mode = "";
         mode = reader.readLine();
         String[] pathsArray = paths.toArray(new String[0]);
-        List<TruthTable> table = readTableFromFile(pathsArray);
+        List<TruthTable> table = null;
+        try{
+            table = readTableFromFile(pathsArray);
+        } catch
+        (IOException | IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+            System.exit(0);
+        }
         String finalMode = mode;
         for (int i = 0; i < table.size(); i++) {
             TruthTable t = table.get(i);

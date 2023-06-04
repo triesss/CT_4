@@ -21,7 +21,7 @@ public class ReaderWriteTable {
     //|  1 |  1 |  1 |  0 |
 
 
-    public static List<TruthTable> readTableFromFile(String[] paths) throws IOException {
+    public static List<TruthTable> readTableFromFile(String[] paths) throws IOException, IllegalArgumentException {
         List<TruthTable> tables = new ArrayList<>();
         Arrays.stream(paths).forEach(p -> {
             List<List<Boolean>> table = new ArrayList<>();
@@ -40,11 +40,17 @@ public class ReaderWriteTable {
             reader.lines().skip(1).forEach(line -> {
                 String[] splits = line.split("\\|");
                 if (splits.length != 5){
-                    throw new IllegalArgumentException("Die Datei ist fehlerhaft");
+                    throw new IllegalArgumentException("the file with the name: " + p + " is not valid (wrong number of columns)");
                 }else {
                     List<Boolean> row = new ArrayList<>();
                     for (int i = 1; i < splits.length; i++) {
-                        row.add(Objects.equals(splits[i].trim(), "1"));
+                        if (Objects.equals(splits[i].trim(), "1")) {
+                            row.add(true);
+                        } else if (Objects.equals(splits[i].trim(), "0")) {
+                            row.add(false);
+                        } else {
+                            throw new IllegalArgumentException("the file with the name: " + p + " is not valid (illegal character)");
+                        }
                     }
                     table.add(row);
                 }
