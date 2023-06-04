@@ -1,4 +1,4 @@
-package org.test;
+package coverage;
 
 public class Pair {
     int indexFirst;
