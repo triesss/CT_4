@@ -30,12 +30,12 @@ public class Main {
         mode = reader.readLine();
         String[] pathsArray = paths.toArray(new String[0]);
         List<TruthTable> table = null;
-        try{
+        try {
             table = readTableFromFile(pathsArray);
         } catch
         (IOException | IllegalArgumentException e) {
             System.err.println(e.getMessage());
-            System.exit(0);
+            throw new RuntimeException(e);
         }
         String finalMode = mode;
         for (int i = 0; i < table.size(); i++) {

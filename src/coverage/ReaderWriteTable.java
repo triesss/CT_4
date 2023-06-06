@@ -75,13 +75,5 @@ public class ReaderWriteTable {
         }
         return tableArray;
     }
-
-    public static void main(String[] args) throws IOException {
-        String[] paths = {"resources/Material-Aufg4/exercises/ex0.md", "resources/Material-Aufg4/exercises/ex1.md"};
-        List<TruthTable> table = readTableFromFile(paths);
-
-        System.out.println(table.get(0).toString());
-        System.out.println(table.get(1).toString());
-
-    }
+    
 }
