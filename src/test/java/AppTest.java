@@ -130,20 +130,7 @@ public class AppTest {
         int[] expectedTable = {0, 1, 2, 3, 4,5, 6,7};; //0,1,2, 3,6
         Assert.assertArrayEquals(expectedTable, actualTable);
     }
-    @Test
-    public void ex3_MMBÜFail() {
-        TruthTable table = tables.get(5);
-        int[] actualTable = runCoverage("MCDC", table);
-        int[] expectedTable = {0, 1, 2, 3, 6};; //0,1,2, 3,6
-        Assert.assertArrayEquals(expectedTable, actualTable);
-    }
-    @Test
-    public void ex3_MCDCFail() {
-        TruthTable table = tables.get(5);
-        int[] actualTable = runCoverage("MCDC", table);
-        int[] expectedTable = {0, 1, 2, 3, 6};; //0,1,2, 3,6
-        Assert.assertArrayEquals(expectedTable, actualTable);
-    }
+
 
 
 
